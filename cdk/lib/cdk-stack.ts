@@ -3,6 +3,7 @@ import { Construct } from 'constructs';
 import * as dynamodb from 'aws-cdk-lib/aws-dynamodb'
 import * as lambda from 'aws-cdk-lib/aws-lambda'
 import * as apigateway from 'aws-cdk-lib/aws-apigateway'
+import { RemovalPolicy } from 'aws-cdk-lib';
 
 export class CdkStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
@@ -18,6 +19,7 @@ export class CdkStack extends cdk.Stack {
         name: "id",
         type: dynamodb.AttributeType.STRING,
       },
+      removalPolicy: RemovalPolicy.DESTROY,
     })
 
     const lambdaFunction = new lambda.Function(this, lambdaFunctionName, {
