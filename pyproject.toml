@@ -1,5 +1,5 @@
 [project]
-name = "lambda"
+name = "dropbox2slack"
 version = "0.1.0"
 description = "Add your description here"
 authors = [
