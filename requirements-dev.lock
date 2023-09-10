@@ -18,6 +18,7 @@ colorama==0.4.6
 coverage==7.3.1
 cryptography==41.0.3
 flake8==6.1.0
+httpretty==1.1.4
 idna==3.4
 iniconfig==2.0.0
 isort==5.12.0

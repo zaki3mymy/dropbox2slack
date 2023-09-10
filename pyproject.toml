@@ -27,6 +27,7 @@ dev-dependencies = [
     "pytest-cov>=4.1.0",
     "pytest-random>=0.2",
     "isort>=5.12.0",
+    "httpretty>=1.1.4",
 ]
 
 [tool.rye.scripts]
