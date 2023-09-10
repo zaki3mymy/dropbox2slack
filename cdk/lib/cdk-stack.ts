@@ -39,5 +39,6 @@ export class CdkStack extends cdk.Stack {
       }
     })
     restApi.root.addMethod("GET", new apigateway.LambdaIntegration(lambdaFunction))
+    restApi.root.addMethod("POST", new apigateway.LambdaIntegration(lambdaFunction))
   }
 }
