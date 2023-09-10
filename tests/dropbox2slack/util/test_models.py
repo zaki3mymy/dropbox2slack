@@ -4,29 +4,25 @@ import boto3
 import pytest
 from moto import mock_dynamodb
 
-from dropbox2slack.util.models import get_cursor, save_cursor, CursorModel
+from dropbox2slack.util.models import CursorModel, get_cursor, save_cursor
 
 
 @pytest.fixture(autouse=True)
 def dynamodb():
-    mock = mock_dynamodb()
-    mock.start()
+    with mock_dynamodb():
+        client = boto3.client("dynamodb")
+        client.create_table(
+            TableName=CursorModel.Meta.table_name,
+            KeySchema=[
+                {"AttributeName": "id", "KeyType": "HASH"},
+            ],
+            AttributeDefinitions=[
+                {"AttributeName": "id", "AttributeType": "S"},
+            ],
+            ProvisionedThroughput={"ReadCapacityUnits": 3, "WriteCapacityUnits": 3},
+        )
 
-    client = boto3.client("dynamodb")
-    client.create_table(
-        TableName=CursorModel.Meta.table_name,
-        KeySchema=[
-            {"AttributeName": "id", "KeyType": "HASH"},
-        ],
-        AttributeDefinitions=[
-            {"AttributeName": "id", "AttributeType": "S"},
-        ],
-        ProvisionedThroughput={"ReadCapacityUnits": 3, "WriteCapacityUnits": 3},
-    )
-
-    yield client
-
-    mock.stop()
+        yield client
 
 
 def test_get_cursor(dynamodb):
