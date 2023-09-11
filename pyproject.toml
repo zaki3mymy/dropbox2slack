@@ -9,6 +9,7 @@ dependencies = [
     "pynamodb>=5.5.0",
     "boto3>=1.28.44",
     "requests>=2.31.0",
+    "pydantic>=2.3.0",
 ]
 readme = "README.md"
 requires-python = ">= 3.8"
