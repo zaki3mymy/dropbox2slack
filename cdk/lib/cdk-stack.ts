@@ -29,6 +29,9 @@ export class CdkStack extends cdk.Stack {
       runtime: lambda.Runtime.PYTHON_3_9,
       environment: {
         "TABLE_NAME": tableName,
+        "DROPBOX_TOKEN": "PUT_YOUR_TOKEN",
+        "DROPBOX_TARGET_DIR": "/path/to/dir",
+        "SLACK_WEBHOOK_URL": "https://hooks.slack.com/services/xxxxxxxx"
       }
     })
 
