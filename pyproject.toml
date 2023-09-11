@@ -35,5 +35,12 @@ format = { chain = ["format:isort", "format:black"] }
 "format:black" = { cmd = "black ." }
 "format:isort" = { cmd = "isort ." }
 
+test = { chain = [
+    "coverage:erase", "test:pytest", "coverage:xml"
+] }
+"test:pytest" = { cmd = "pytest --cov=src --cov-branch" }
+"coverage:xml" = { cmd = "coverage xml" }
+"coverage:erase" = { cmd = "coverage erase" }
+
 [tool.hatch.metadata]
 allow-direct-references = true
