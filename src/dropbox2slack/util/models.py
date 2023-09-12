@@ -1,6 +1,5 @@
-from pynamodb.models import Model
 from pynamodb.attributes import UnicodeAttribute
-
+from pynamodb.models import Model
 
 CURSOR_ID = "cursor"
 
@@ -30,5 +29,5 @@ def save_cursor(cursor: str):
     Args:
         cursor (str): cursor
     """
-    cursor = CursorModel(CURSOR_ID, cursor)
-    cursor.save()
+    cursor_model = CursorModel(CURSOR_ID, cursor)
+    cursor_model.save()
