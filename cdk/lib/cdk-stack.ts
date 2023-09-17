@@ -9,9 +9,13 @@ export class CdkStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
-    const tableName = "dropbox2slack-table"
-    const lambdaFunctionName = "dropbox2slack"
-    const restApiName = "dropbox2slack-api"
+    const prefix = ""
+
+    const appName = `${prefix}dropbox2slack`
+    const tableName = `${appName}-table`
+    const lambdaFunctionName = `${appName}`
+    const lambdaLayerName = `${appName}-layer`
+    const restApiName = `${appName}-api`
 
     const table = new dynamodb.Table(this, tableName, {
       tableName: tableName,
@@ -20,6 +24,12 @@ export class CdkStack extends cdk.Stack {
         type: dynamodb.AttributeType.STRING,
       },
       removalPolicy: RemovalPolicy.DESTROY,
+    })
+
+    const lambdaLayer = new lambda.LayerVersion(this, lambdaLayerName, {
+      layerVersionName: lambdaLayerName,
+      code: new lambda.AssetCode("../layer"),
+      compatibleRuntimes: [lambda.Runtime.PYTHON_3_9],
     })
 
     const lambdaFunction = new lambda.Function(this, lambdaFunctionName, {
@@ -32,7 +42,8 @@ export class CdkStack extends cdk.Stack {
         "DROPBOX_TOKEN": "PUT_YOUR_TOKEN",
         "DROPBOX_TARGET_DIR": "/path/to/dir",
         "SLACK_WEBHOOK_URL": "https://hooks.slack.com/services/xxxxxxxx"
-      }
+      },
+      layers: [lambdaLayer],
     })
 
     const restApi = new apigateway.RestApi(this, restApiName, {
