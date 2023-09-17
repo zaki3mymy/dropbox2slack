@@ -22,13 +22,29 @@ jobs:
         with:
           node-version: '18.x'
 
+      - name: Cache node_modules
+        id: node_modules_cache_id
+        uses: actions/cache@v2
+        with:
+          path: node_modules
+          key: ${{ matrix.os }}-node-v${{ matrix.node }}-deps-${{ hashFiles(format('{0}/{1}', github.workspace, 'cdk/package.json')) }}
+
       - name: Setup dependencies
+        if: steps.node_modules_cache_id.outputs.cache-hit != 'true'
         run: npm ci
 
       - name: Build
         run: npm run build
 
+      - name: Cache python libraries
+        id: pip_cache_id
+        uses: actions/cache@v2
+        with:
+          path: ../layer/python/
+          key: ${{ matrix.os }}-node-v${{ matrix.node }}-deps-${{ hashFiles(format('{0}/{1}', github.workspace, 'requirements.lock')) }}
+
       - name: Setup Python dependencies
+        if: steps.pip_cache_id.outputs.cache-hit != 'true'
         run: mkdir -p ../layer/python/ && pip install -y -r ../requirements.lock -t ../layer/python/
 
       - name: CDK Diff Check
