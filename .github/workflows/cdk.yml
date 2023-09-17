@@ -40,7 +40,7 @@ jobs:
         id: pip_cache_id
         uses: actions/cache@v2
         with:
-          path: ../layer/python/
+          path: ${{ format('{0}/{1}', github.workspace, 'layer/python/') }}
           key: ${{ matrix.os }}-node-v${{ matrix.node }}-deps-${{ hashFiles(format('{0}/{1}', github.workspace, 'requirements.lock')) }}
 
       - name: Setup Python dependencies
