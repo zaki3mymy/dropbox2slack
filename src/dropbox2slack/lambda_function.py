@@ -1,23 +1,36 @@
-import json
 import os
 
 import api.dropboxapi as dropboxapi
 import api.slackapi as slackapi
 import util.models as models
 from aws_lambda_powertools import Logger
+from aws_lambda_powertools.event_handler.api_gateway import (
+    ApiGatewayResolver,
+    ProxyEventType,
+    Response,
+)
+from aws_lambda_powertools.utilities.data_classes import APIGatewayProxyEvent
+from aws_lambda_powertools.utilities.typing import LambdaContext
+
+app = ApiGatewayResolver(proxy_type=ProxyEventType.APIGatewayProxyEvent)
 
 logger = Logger()
 
 
-def verify(event):
-    challenge = event["queryStringParameters"]["challenge"]
+@app.get("/")
+def verify():
+    challenge = app.current_event.get_query_string_value("challenge")
+    if not challenge:
+        logger.error("There is no 'challenge' parameter.")
+        return Response(400)
     headers = {
         "Content-Type": "text/plain",
-        "X-Content-Type-Options": "nosniff",
+        "X-Content-Type-Options": ["nosniff"],
     }
-    return {"statusCode": 200, "headers": headers, "body": challenge}
+    return Response(200, headers=headers, body=challenge)
 
 
+@app.post("/")
 def webhook():
     DROPBOX_TARGET_DIR = os.environ["DROPBOX_TARGET_DIR"]
     cursor = models.get_cursor()
@@ -64,10 +77,5 @@ def webhook():
 
 
 @logger.inject_lambda_context(log_event=True)
-def lambda_handler(event, context):
-    if event["httpMethod"] == "GET":
-        return verify(event)
-    elif event["httpMethod"] == "POST":
-        webhook()
-
-    return {"statusCode": 200, "body": json.dumps("Hello from Lambda!")}
+def lambda_handler(event: APIGatewayProxyEvent, context: LambdaContext):
+    return app.resolve(event, context)
