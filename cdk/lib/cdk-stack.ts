@@ -1,6 +1,7 @@
 import * as cdk from 'aws-cdk-lib';
 import { Construct } from 'constructs';
 import * as dynamodb from 'aws-cdk-lib/aws-dynamodb'
+import * as iam from 'aws-cdk-lib/aws-iam'
 import * as lambda from 'aws-cdk-lib/aws-lambda'
 import * as apigateway from 'aws-cdk-lib/aws-apigateway'
 import { RemovalPolicy } from 'aws-cdk-lib';
@@ -13,6 +14,7 @@ export class CdkStack extends cdk.Stack {
 
     const appName = `${prefix}dropbox2slack`
     const tableName = `${appName}-table`
+    const roleName = `${appName}-role`
     const lambdaFunctionName = `${appName}`
     const lambdaLayerName = `${appName}-layer`
     const restApiName = `${appName}-api`
@@ -24,6 +26,15 @@ export class CdkStack extends cdk.Stack {
         type: dynamodb.AttributeType.STRING,
       },
       removalPolicy: RemovalPolicy.DESTROY,
+    })
+
+    const iamRole = new iam.Role(this, roleName, {
+      assumedBy: new iam.ServicePrincipal("lambda.amazonaws.com"),
+      roleName: roleName,
+      managedPolicies: [
+        iam.ManagedPolicy.fromAwsManagedPolicyName("service-role/AWSLambdaBasicExecutionRole"),
+        iam.ManagedPolicy.fromAwsManagedPolicyName("AmazonDynamoDBFullAccess"),
+      ]
     })
 
     const lambdaLayer = new lambda.LayerVersion(this, lambdaLayerName, {
@@ -44,6 +55,7 @@ export class CdkStack extends cdk.Stack {
         "SLACK_WEBHOOK_URL": "https://hooks.slack.com/services/xxxxxxxx"
       },
       layers: [lambdaLayer],
+      role: iamRole,
     })
 
     const restApi = new apigateway.RestApi(this, restApiName, {
