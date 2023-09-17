@@ -45,7 +45,7 @@ jobs:
 
       - name: Setup Python dependencies
         if: steps.pip_cache_id.outputs.cache-hit != 'true'
-        run: mkdir -p ../layer/python/ && pip install -y -r ../requirements.lock -t ../layer/python/
+        run: mkdir -p ../layer/python/ && pip install -r ../requirements.lock -t ../layer/python/
 
       - name: CDK Diff Check
         if: contains(github.event_name, 'pull_request')
