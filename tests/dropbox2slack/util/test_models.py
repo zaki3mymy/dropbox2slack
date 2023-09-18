@@ -1,4 +1,5 @@
 import uuid
+import os
 
 import boto3
 import pytest
@@ -9,10 +10,13 @@ from dropbox2slack.util.models import CursorModel, get_cursor, save_cursor
 
 @pytest.fixture(autouse=True)
 def dynamodb():
+    # NOTE: Since it is static, it will be loaded at the start of the test.
+    CursorModel.Meta.table_name = os.environ["TABLE_NAME"]
+
     with mock_dynamodb():
         client = boto3.client("dynamodb")
         client.create_table(
-            TableName=CursorModel.Meta.table_name,
+            TableName=os.environ["TABLE_NAME"],
             KeySchema=[
                 {"AttributeName": "id", "KeyType": "HASH"},
             ],
@@ -32,7 +36,7 @@ def test_get_cursor(dynamodb):
         "id": {"S": "cursor"},
         "cursor": {"S": exp},
     }
-    dynamodb.put_item(TableName=CursorModel.Meta.table_name, Item=item)
+    dynamodb.put_item(TableName=os.environ["TABLE_NAME"], Item=item)
 
     # execute
     actual = get_cursor()
@@ -58,7 +62,7 @@ def test_save_cursor(dynamodb):
 
     # verify
     item = {"id": {"S": "cursor"}}
-    act = dynamodb.get_item(TableName=CursorModel.Meta.table_name, Key=item)
+    act = dynamodb.get_item(TableName=os.environ["TABLE_NAME"], Key=item)
 
     exp = {"id": {"S": "cursor"}, "cursor": {"S": cursor}}
     assert exp == act["Item"]
@@ -70,7 +74,7 @@ def test_update_cursor(dynamodb):
         "id": {"S": "cursor"},
         "cursor": {"S": "UT-cursor"},
     }
-    dynamodb.put_item(TableName=CursorModel.Meta.table_name, Item=item)
+    dynamodb.put_item(TableName=os.environ["TABLE_NAME"], Item=item)
     cursor = str(uuid.uuid4())
 
     # execute
@@ -78,7 +82,7 @@ def test_update_cursor(dynamodb):
 
     # verify
     item = {"id": {"S": "cursor"}}
-    act = dynamodb.get_item(TableName=CursorModel.Meta.table_name, Key=item)
+    act = dynamodb.get_item(TableName=os.environ["TABLE_NAME"], Key=item)
 
     exp = {"id": {"S": "cursor"}, "cursor": {"S": cursor}}
     assert exp == act["Item"]
