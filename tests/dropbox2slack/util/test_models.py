@@ -36,7 +36,17 @@ def test_get_cursor(dynamodb):
 
     # execute
     actual = get_cursor()
+
+    # verify
     assert exp == actual
+
+
+def test_get_cursor_no_record():
+    # prepare
+
+    # execute / verify
+    with pytest.raises(CursorModel.DoesNotExist):
+        get_cursor()
 
 
 def test_save_cursor(dynamodb):
