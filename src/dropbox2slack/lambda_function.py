@@ -33,7 +33,11 @@ def verify():
 @app.post("/")
 def webhook():
     DROPBOX_TARGET_DIR = os.environ["DROPBOX_TARGET_DIR"]
-    cursor = models.get_cursor()
+    try:
+        cursor = models.get_cursor()
+    except models.CursorModel.DoesNotExist:  # type: ignore
+        res = dropboxapi.get_latest_cursor(DROPBOX_TARGET_DIR)
+        cursor = res["cursor"]
 
     res = dropboxapi.list_folder_continue(cursor)
     models.save_cursor(res["cursor"])
