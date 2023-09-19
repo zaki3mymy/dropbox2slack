@@ -15,16 +15,16 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - name: Checkout
-        uses: actions/checkout@v1
+        uses: actions/checkout@v4
 
       - name: Setup Node
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v3
         with:
           node-version: '18.x'
 
       - name: Cache node_modules
         id: node_modules_cache_id
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ${{ format('{0}/{1}', github.workspace, 'cdk/node_modules') }}
           key: ${{ matrix.os }}-node-v${{ matrix.node }}-deps-${{ hashFiles(format('{0}/{1}', github.workspace, 'cdk/package.json')) }}
@@ -38,7 +38,7 @@ jobs:
 
       - name: Cache python libraries
         id: pip_cache_id
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ${{ format('{0}/{1}', github.workspace, 'layer/python/') }}
           key: ${{ matrix.os }}-node-v${{ matrix.node }}-deps-${{ hashFiles(format('{0}/{1}', github.workspace, 'requirements.lock')) }}
