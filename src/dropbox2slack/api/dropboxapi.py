@@ -6,14 +6,16 @@ import requests
 CONTENT_TYPE_JSON = "application/json"
 
 
-def get_latest_cursor(path: str) -> str:
+def get_latest_cursor(path: str) -> dict:
     """Get latest cursor.
 
     Args:
         path (str): folder path
 
     Returns:
-        str: cursor
+        dict: {
+            "cursor": cursor value
+        }
     """
     DROPBOX_TOKEN = os.environ["DROPBOX_TOKEN"]
 
