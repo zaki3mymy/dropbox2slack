@@ -4,6 +4,7 @@ import * as dynamodb from 'aws-cdk-lib/aws-dynamodb'
 import * as iam from 'aws-cdk-lib/aws-iam'
 import * as lambda from 'aws-cdk-lib/aws-lambda'
 import * as apigateway from 'aws-cdk-lib/aws-apigateway'
+import * as python from '@aws-cdk/aws-lambda-python-alpha'
 import { RemovalPolicy } from 'aws-cdk-lib';
 
 export class CdkStack extends cdk.Stack {
@@ -37,9 +38,9 @@ export class CdkStack extends cdk.Stack {
       ]
     })
 
-    const lambdaLayer = new lambda.LayerVersion(this, lambdaLayerName, {
+    const lambdaLayer = new python.PythonLayerVersion(this, lambdaLayerName, {
       layerVersionName: lambdaLayerName,
-      code: new lambda.AssetCode("../layer"),
+      entry: "../layer",
       compatibleRuntimes: [lambda.Runtime.PYTHON_3_9],
     })
 
