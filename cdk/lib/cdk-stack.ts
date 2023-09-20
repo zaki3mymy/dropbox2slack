@@ -57,6 +57,7 @@ export class CdkStack extends cdk.Stack {
       },
       layers: [lambdaLayer],
       role: iamRole,
+      timeout: cdk.Duration.seconds(30)
     })
 
     const restApi = new apigateway.RestApi(this, restApiName, {
