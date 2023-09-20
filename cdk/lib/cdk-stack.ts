@@ -27,6 +27,7 @@ export class CdkStack extends cdk.Stack {
         type: dynamodb.AttributeType.STRING,
       },
       removalPolicy: RemovalPolicy.DESTROY,
+      billingMode: dynamodb.BillingMode.PAY_PER_REQUEST,
     })
 
     const iamRole = new iam.Role(this, roleName, {
