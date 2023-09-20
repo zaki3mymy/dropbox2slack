@@ -45,7 +45,7 @@ def webhook():
     if len(res["entries"]) == 0:
         # no change
         logger.info("no change in {}".format(DROPBOX_TARGET_DIR))
-        return ""
+        return Response(200, body="no change")
 
     store = slackapi.ChangedFileStore()
     for entry in res["entries"]:
