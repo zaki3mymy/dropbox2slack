@@ -1,0 +1,30 @@
+name: test
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Cache python libraries
+        id: pip_cache_id
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/pip
+          key: ${{ matrix.os }}-node-v${{ matrix.node }}-deps-${{ hashFiles(format('{0}/{1}', github.workspace, 'requirements.lock')) }}
+
+      - name: Copy requirements for CDK
+        run: pip install -r requirements.lock -r requirements-dev.lock
+
+      - name: Lint
+        run: flake8 src
+
+      - name: Test
+        run: pytest --cov=src --cov-branch tests
