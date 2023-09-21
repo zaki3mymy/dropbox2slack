@@ -50,3 +50,6 @@ allow-direct-references = true
 [tool.pytest.ini_options]
 pythonpath = ["src", "src/dropbox2slack",]
 testpaths = ["tests",]
+
+[tool.black]
+line-length = 79

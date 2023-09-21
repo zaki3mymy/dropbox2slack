@@ -25,7 +25,9 @@ def get_latest_cursor(path: str) -> dict:
         "Authorization": "Bearer {}".format(DROPBOX_TOKEN),
     }
     data = {"path": path, "recursive": True}
-    response = requests.post(url, data=json.dumps(data), headers=headers).json()
+    response = requests.post(
+        url, data=json.dumps(data), headers=headers
+    ).json()
 
     return response
 
@@ -55,7 +57,9 @@ def list_folder_continue(cursor: str) -> dict:
         "Authorization": "Bearer {}".format(DROPBOX_TOKEN),
     }
     data = {"cursor": cursor}
-    response = requests.post(url, data=json.dumps(data), headers=headers).json()
+    response = requests.post(
+        url, data=json.dumps(data), headers=headers
+    ).json()
 
     return response
 
@@ -83,7 +87,9 @@ def list_shared_link(path: str) -> dict:
         "Authorization": "Bearer {}".format(DROPBOX_TOKEN),
     }
     data = {"path": path}
-    response = requests.post(url, data=json.dumps(data), headers=headers).json()
+    response = requests.post(
+        url, data=json.dumps(data), headers=headers
+    ).json()
 
     return response
 
@@ -106,9 +112,15 @@ def modify_shared_link(shared_link_url: str) -> dict:
     }
     data = {
         "url": shared_link_url,
-        "settings": {"audience": "team", "access": "viewer", "allow_download": True},
+        "settings": {
+            "audience": "team",
+            "access": "viewer",
+            "allow_download": True,
+        },
     }
-    response = requests.post(url, data=json.dumps(data), headers=headers).json()
+    response = requests.post(
+        url, data=json.dumps(data), headers=headers
+    ).json()
 
     return response
 
@@ -126,15 +138,23 @@ def create_shared_link(path: str) -> dict:
     """
     DROPBOX_TOKEN = os.environ["DROPBOX_TOKEN"]
 
-    url = "https://api.dropboxapi.com/2/sharing/create_shared_link_with_settings"
+    url = (
+        "https://api.dropboxapi.com/2/sharing/create_shared_link_with_settings"
+    )
     headers = {
         "Content-Type": CONTENT_TYPE_JSON,
         "Authorization": "Bearer {}".format(DROPBOX_TOKEN),
     }
     data = {
         "path": path,
-        "settings": {"audience": "public", "access": "viewer", "allow_download": True},
+        "settings": {
+            "audience": "public",
+            "access": "viewer",
+            "allow_download": True,
+        },
     }
-    response = requests.post(url, data=json.dumps(data), headers=headers).json()
+    response = requests.post(
+        url, data=json.dumps(data), headers=headers
+    ).json()
 
     return response
