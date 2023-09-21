@@ -18,16 +18,16 @@ def test_get_latest_cursor():
     httpretty.register_uri(
         httpretty.POST,
         "https://api.dropboxapi.com/2/files/list_folder/get_latest_cursor",
-        responses=[HTTPretty.Response('"cursor"')],
+        responses=[HTTPretty.Response(json.dumps({"cursor": "cursor_value"}))],
     )
 
     # execute
-    path = "//path/to/folder"
+    path = "/path/to/folder"
     actual = dropboxapi.get_latest_cursor(path)
 
     # verify
     print(actual)
-    assert "cursor" == actual
+    assert "cursor_value" == actual["cursor"]
 
 
 def test_list_folder_continue():

@@ -1,3 +1,5 @@
+import os
+
 from pynamodb.attributes import UnicodeAttribute
 from pynamodb.models import Model
 
@@ -6,7 +8,7 @@ CURSOR_ID = "cursor"
 
 class CursorModel(Model):
     class Meta:
-        table_name = "dropboxapi-table"
+        table_name = os.environ.get("TABLE_NAME")
         region = "ap-northeast-1"
 
     id = UnicodeAttribute(hash_key=True)
