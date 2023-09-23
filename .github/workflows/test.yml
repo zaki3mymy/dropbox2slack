@@ -10,9 +10,6 @@ jobs:
   test:
     runs-on: ubuntu-22.04
     steps:
-      - name: Setup Ubuntu
-        run: sudo apt -y update && sudo apt -y upgrade
-
       - name: Checkout
         uses: actions/checkout@v4
 
