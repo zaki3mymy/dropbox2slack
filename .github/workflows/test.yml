@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - name: Setup Ubuntu
-        run: apt -y update && apt -y upgrade
+        run: sudo apt -y update && sudo apt -y upgrade
 
       - name: Checkout
         uses: actions/checkout@v4
