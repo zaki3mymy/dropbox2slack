@@ -68,7 +68,9 @@ def webhook():
             else:
                 logger.debug("create_shared_link")
                 res = dropboxapi.create_shared_link(filepath)
-                logger.debug("Response of create shared link...: {}".format(res))
+                logger.debug(
+                    "Response of create shared link...: {}".format(res)
+                )
                 url = res["url"]
 
             store.add(channel, filepath, url)

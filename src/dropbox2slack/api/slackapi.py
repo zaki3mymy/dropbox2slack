@@ -55,7 +55,9 @@ class SlackMessageStore:
 
     def generate_messages_items(self) -> Iterator[Tuple[str, dict]]:
         for channel, filelist in self.files_by_channel.items():
-            fields = [{"title": "以下のファイルが更新されました。", "value": "\n".join(filelist)}]
+            fields = [
+                {"title": "以下のファイルが更新されました。", "value": "\n".join(filelist)}
+            ]
             data = {
                 "channel": channel,
                 "attachments": [
@@ -87,7 +89,8 @@ def send_messages(store: SlackMessageStore):
         if res.status_code == HTTPStatus.NOT_FOUND:
             # default channel is that configed Incoming Webhooks.
             logger.warning(
-                'channel "%s" does not exist. send to default channel.', channel
+                'channel "%s" does not exist. send to default channel.',
+                channel,
             )
             del data["channel"]
             msg = json.dumps(data)
