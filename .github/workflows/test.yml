@@ -9,6 +9,9 @@ on:
 jobs:
   test:
     runs-on: ubuntu-22.04
+    env:
+      AWS_DEFAULT_REGION: ap-northeast-1
+      AWS_REGION: ap-northeast-1
     steps:
       - name: Checkout
         uses: actions/checkout@v4
